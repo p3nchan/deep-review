@@ -4,6 +4,8 @@
   <strong>From articles to architecture decisions</strong>
   <br/><br/>
   <a href="#中文版">中文版在下方</a>
+  <br/>
+  <a href="https://penchan.co/ai/introducing-deep-review/">好讀版在我的官網上</a>
 </div>
 
 ---
