@@ -3,9 +3,14 @@
   <br/><br/>
   <strong>From articles to architecture decisions</strong>
   <br/><br/>
+  <a href="#中文版">中文版在下方</a>
 </div>
 
 ---
+
+> **Mission:** Give AI agents a research methodology — a structured way to
+> rapidly and thoroughly evaluate external resources before deciding what to
+> adopt. Not copying, but learning with discipline.
 
 You read a great article. New tips, better workflows, smarter prompts.
 
@@ -112,5 +117,116 @@ This isn't guesswork. The design is grounded in:
   teams document decisions that stick
 
 ## License
+
+MIT
+
+---
+
+<h2 id="中文版">中文版</h2>
+
+> **宗旨：** 讓 AI Agent 擁有一套研究方法論——快速且全面地評估外部資源，
+> 再決定要不要採用。不是照抄，而是有紀律地學習。
+
+你讀了一篇好文章。新技巧、更好的工作流程、更聰明的 prompt。
+
+但你真的應該改什麼嗎？
+
+**deep-review** 是一個 Claude Code 的 skill，幫你回答這個問題。不靠直覺，
+而是把每個建議丟進結構化的 pipeline，給你明確的判定：**採用**、**實驗**、
+**拒絕**、或**需要討論**。
+
+## 問題
+
+我們都做過這件事：
+
+1. 讀到一篇讓人興奮的文章
+2. 心想「太厲害了，我應該用這個」
+3. 然後要嘛全盤照收（讓系統變臃腫），要嘛什麼都不做（然後忘了）
+
+問題不在文章本身——而是我們跳過了分析。我們被作者名氣、新鮮感、
+或「想做點什麼」的衝動牽著走。deep-review 補上你在時間精力無限時會做的那一步思考。
+
+## 運作方式
+
+六個階段，環環相扣。
+
+```
+文章 --> 過濾 --> 提取 --> 比對 --> 論辯 --> 決策 --..-> 審計 --> 結果
+          |                                            ^
+          +-- 出口：跟我們無關                      subagent
+```
+
+| 階段 | 做什麼 |
+|------|--------|
+| **0. 過濾** | 第一個問題：「我們真的有這個問題嗎？」沒有就直接結束，省下時間。 |
+| **1. 提取** | 把文章拆成獨立的主張（claims）。標記每一條的證據類型：數據、案例、邏輯推理、還是純粹觀點。 |
+| **2. 比對** | 把每條主張和系統現狀對照。要打開實際檔案——不能含糊帶過。 |
+| **3. 論辯** | 針對每條主張列出支持與反對的理由。成本多少？可能出什麼問題？缺什麼資訊？ |
+| **4. 決策** | 每條主張一張決策卡。採用、小規模實驗、拒絕、或標記為待討論。 |
+| **5. 審計** | 獨立的盲點檢查——以**獨立的 agent 呼叫**執行，避免受到前面分析的影響。 |
+
+### 為什麼審計要獨立執行？
+
+AI 在同一次生成中評估自己的輸出時，幾乎總是說「看起來不錯」。
+研究顯示這種自我審查的[辨別力趨近於零](https://arxiv.org/html/2412.05579)。
+將審計作為獨立呼叫執行，解決這個問題。
+
+### 關於審計的定位
+
+這裡的審計不是對來源文章做嚴格的真偽查核——deep-review 的核心態度是**學習**，
+不是**複製**。Phase 5 審計的是分析過程本身的品質：有沒有盲點、偏見、或草率判斷。
+既然我們是帶著學習的心態去評估資源，輕量的紅旗審計就足夠了。
+
+## 快速開始
+
+### Claude Code
+
+1. 把 `deep-review.md` 複製到你的專案目錄或 `~/.claude/` skills 目錄
+2. 輸入 `deep-review`，貼上文章
+3. 得到結構化分析和明確的可執行決策
+
+### 其他 AI 工具
+
+skill 檔案就是一份結構化 prompt。你可以改寫後用於 Cursor、Windsurf，
+或任何能讀 markdown 指令的 AI 助手。
+
+## 設計選擇
+
+**為什麼不用角色扮演？**
+很多 prompt 讓「架構師」和「懷疑論者」辯論。但在單次生成中，
+[這其實不管用](https://arxiv.org/abs/2509.05396)——AI 無法為每個角色獨立推理，
+第二個角色只是附和第一個。我們改用結構化提問。
+
+**為什麼不打分？**
+自評分數（7/10、85%）聽起來精確但不可靠。AI 傾向給自己及格。
+審計改為檢查特定的失敗模式——比如「所有主張都被採用」或「沒有反對意見」。
+
+**為什麼有 Phase 0？**
+多數文章解決的問題你根本沒有。及早發現可以省下 token，避免不必要的改動。
+「什麼都不做」是完全合理的結果。
+
+## 持續改善
+
+這個 skill 會越用越好：
+
+1. 每次 review 後，記下實際採用了什麼、跳過了什麼
+2. 每 5-10 次 review，找規律——哪些類型的主張容易判斷失誤？
+3. 微調 prompt——一次改一個地方，測試，保留或回退
+4. 在檔案開頭記錄版本
+
+這遵循 [autoresearch](https://github.com/karpathy/autoresearch) 的哲學：
+小幅度、可衡量的改善——而非大規模重寫。
+
+## 背後的研究
+
+設計有據可查：
+
+- [CheckEval](https://arxiv.org/abs/2403.18771) — 為什麼 checklist 比開放式評分更好
+- [LLM-as-Judge 研究](https://arxiv.org/html/2406.12624) — 已知偏見與應對方式
+- [多 Agent 辯論研究](https://arxiv.org/abs/2509.05396) — 為什麼 AI「辯論」常常適得其反
+- [Heilmeier Catechism](https://www.darpa.mil/about/heilmeier-catechism) — DARPA 的提案評估方法
+- [Architecture Decision Records](https://adr.github.io/) — 工程團隊如何記錄可持續的決策
+
+## 授權
 
 MIT
