@@ -1,10 +1,12 @@
-<div align="center">
-  <img src="assets/cover.webp" width="100%" alt="deep-review"/>
-  <br/><br/>
-  <strong>From articles to architecture decisions</strong>
-  <br/><br/>
-  <a href="#中文版">中文版</a>&nbsp;|&nbsp;<a href="https://penchan.co/ai/introducing-deep-review/">網頁版</a>
-</div>
+<p align="center">
+  <img src="assets/banner.webp" alt="Deep Review" width="100%">
+</p>
+
+# Deep Review
+
+> **🐧 中文網頁版** — [penchan.co/ai/introducing-deep-review](https://penchan.co/ai/introducing-deep-review/)
+
+**From articles to architecture decisions**
 
 ---
 
@@ -44,6 +46,8 @@ We all do this:
 The issue isn't the articles — it's that we skip the analysis. We get swayed by
 who wrote it, how new it sounds, or the urge to "do something." deep-review
 adds the thinking step you'd do if you had unlimited time and patience.
+
+<img src="assets/sections/pipeline.webp" alt="Pipeline" width="100%">
 
 ## How it works
 
